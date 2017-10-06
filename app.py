@@ -33,6 +33,14 @@ def logout():
     session.clear() #clears the session to remove the 'username' key
     return redirect(url_for('home')) #redirects user back to homepage
 
+@app.route('/zoo')
+def loo():
+    return 'hello'
+    
 if __name__ == '__main__':
     app.debug = True
     app.run()
+    print "wtf"
+    print (url_for('home'))
+
+    
