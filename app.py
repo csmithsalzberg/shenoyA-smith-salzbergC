@@ -25,22 +25,22 @@ def home():
 def login():
     if request.form['username'] == 'admin' and request.form['password'] == 'password': #the only correct username is "admin" and the only correct password is "password"
         session['username'] = 'admin' #sets the 'username' key to something so that it can be recognized
-        return render_template('logged.html') #tells the user they are logged in
-    return render_template('failed.html') #otherwise tells the user their credentials were incorrect
+        return redirect(url_for('logged')) #tells the user they are logged in
+    return redirect(url_for('failed')) #otherwise tells the user their credentials were incorrect
+
+@app.route('/logged')
+def logged():
+    return render_template('logged.html')
+
+@app.route('/failed')
+def failed():
+    return render_template('failed.html')
 
 @app.route('/logout')
 def logout():
     session.clear() #clears the session to remove the 'username' key
     return redirect(url_for('home')) #redirects user back to homepage
 
-@app.route('/zoo')
-def loo():
-    return 'hello'
-    
 if __name__ == '__main__':
     app.debug = True
     app.run()
-    print "wtf"
-    print (url_for('home'))
-
-    
