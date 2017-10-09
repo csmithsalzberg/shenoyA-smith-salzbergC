@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
 """
-Caleb Smith-Salzberg && Anish Shenoy
+Michael Ruvinshteyn && Anish Shenoy
 SoftDev1 pd7
 HW07 -- Do I Know You?
-2017 - 10 - 9
+2017 - 10 - 4
 """
 
 from flask import Flask, render_template, redirect, url_for, request, session
