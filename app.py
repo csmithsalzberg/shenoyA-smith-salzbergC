@@ -22,18 +22,23 @@ def home():
     #session['username'] is safe b/c we checked for its existance
     return render_template('login.html') #otherwise renders the login page
 
-@app.route('/login', methods=['POST']) #uses POST method for form submission
+@app.route('/login', methods=['POST','GET']) #uses POST method for form submission
 def login():
-    if request.form['username'] == 'admin' and request.form['password'] == 'password':
-        #the only correct username is "admin" and the only correct password is "password"
-        session['username'] = 'admin' #sets the 'username' key to something so that it can be recognized
+    if session.has_key('username'):
         return redirect(url_for('welcome')) #tells the user they are logged in
-    return render_template('login.html') #otherwise renders the login page
+    if 'username' in request.form:
+        if request.form['username'] == 'admin' and request.form['password'] == 'password':
+            #the only correct username is "admin" and the only correct password is "password"
+            session['username'] = 'admin' #sets the 'username' key to something so that it can be recognized    
+            return redirect(url_for('welcome')) #logs the user in
+        return redirect(url_for('failed'))
+    return render_template('login.html')
 
 @app.route('/welcome') #update to check credentials
 def welcome():
-    return render_template('welcome.html')
-
+    if session.has_key('username'): #renders welcome page if a 'username' key exists
+        return render_template('welcome.html')
+    return redirect(url_for('home'))
 @app.route('/failed')
 def failed():
     return render_template('failed.html')
