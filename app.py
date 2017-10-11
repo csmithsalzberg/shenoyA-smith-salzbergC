@@ -18,19 +18,21 @@ app.secret_key = os.urandom(32)
 @app.route('/')
 def home():
     if session.has_key('username'): #renders welcome page if a 'username' key exists
-        return render_template('welcome.html', UN = session['username']) #session['username'] is safe b/c we checked for its existance
+        return redirect(url_for('welcome'))
+    #session['username'] is safe b/c we checked for its existance
     return render_template('login.html') #otherwise renders the login page
 
 @app.route('/login', methods=['POST']) #uses POST method for form submission
 def login():
-    if request.form['username'] == 'admin' and request.form['password'] == 'password': #the only correct username is "admin" and the only correct password is "password"
+    if request.form['username'] == 'admin' and request.form['password'] == 'password':
+        #the only correct username is "admin" and the only correct password is "password"
         session['username'] = 'admin' #sets the 'username' key to something so that it can be recognized
-        return redirect(url_for('logged')) #tells the user they are logged in
-    return redirect(url_for('failed')) #otherwise tells the user their credentials were incorrect
+        return redirect(url_for('welcome')) #tells the user they are logged in
+    return render_template('login.html') #otherwise renders the login page
 
-@app.route('/logged')
-def logged():
-    return render_template('logged.html')
+@app.route('/welcome') #update to check credentials
+def welcome():
+    return render_template('welcome.html')
 
 @app.route('/failed')
 def failed():
