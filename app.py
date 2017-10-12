@@ -18,33 +18,32 @@ app.secret_key = os.urandom(32)
 def checklogged():
     if session.has_key('username'): #renders welcome page if a 'username' key exists
         return redirect(url_for('welcome')) #tells the user they are logged in
+    return render_template('login.html') #otherwise renders the login page
+
 def auth():
-    return request.form['username'] == 'admin' and request.form['password'] == 'password'
+    if 'username' in request.form:
+        return request.form['username'] == 'admin' and request.form['password'] == 'password'
     #the only correct username is "admin" and the only correct password is "password"
+    return False 
     
 @app.route('/')
 def home():
-    checklogged() #renders welcome page if a 'username' key exists
-        #return redirect(url_for('welcome'))
-    #session['username'] is safe b/c we checked for its existance
-    return render_template('login.html') #otherwise renders the login page
+    return checklogged() #renders welcome page if a 'username' key exists
 
 @app.route('/login', methods=['POST','GET']) #uses POST method for form submission
 def login():
-    checklogged()
-        #return redirect(url_for('welcome')) #tells the user they are logged in
-    if 'username' in request.form:
-        if auth():
+    if auth():
             session['username'] = 'admin' #sets the 'username' key to something so that it can be recognized    
             return redirect(url_for('welcome')) #logs the user in
-        return redirect(url_for('failed'))
-    return render_template('login.html')
+    return checklogged()
+    #return render_template('login.html')
 
 @app.route('/welcome') #update to check credentials
 def welcome():
-    checklogged() #renders welcome page if a 'username' key exists
-        #return render_template('welcome.html')
-    return redirect(url_for('home'))
+    if session.has_key('username'): #renders welcome page if a 'username' key exists
+        return render_template('welcome.html')
+    return checklogged()
+    
 @app.route('/failed')
 def failed():
     return render_template('failed.html')
