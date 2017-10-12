@@ -15,20 +15,26 @@ app = Flask(__name__)
 #genrerates random key
 app.secret_key = os.urandom(32)
 
+def checklogged():
+    if session.has_key('username'): #renders welcome page if a 'username' key exists
+        return redirect(url_for('welcome')) #tells the user they are logged in
+def auth():
+    return request.form['username'] == 'admin' and request.form['password'] == 'password'
+    #the only correct username is "admin" and the only correct password is "password"
+    
 @app.route('/')
 def home():
-    if session.has_key('username'): #renders welcome page if a 'username' key exists
-        return redirect(url_for('welcome'))
+    checklogged() #renders welcome page if a 'username' key exists
+        #return redirect(url_for('welcome'))
     #session['username'] is safe b/c we checked for its existance
     return render_template('login.html') #otherwise renders the login page
 
 @app.route('/login', methods=['POST','GET']) #uses POST method for form submission
 def login():
-    if session.has_key('username'):
-        return redirect(url_for('welcome')) #tells the user they are logged in
+    checklogged()
+        #return redirect(url_for('welcome')) #tells the user they are logged in
     if 'username' in request.form:
-        if request.form['username'] == 'admin' and request.form['password'] == 'password':
-            #the only correct username is "admin" and the only correct password is "password"
+        if auth():
             session['username'] = 'admin' #sets the 'username' key to something so that it can be recognized    
             return redirect(url_for('welcome')) #logs the user in
         return redirect(url_for('failed'))
@@ -36,8 +42,8 @@ def login():
 
 @app.route('/welcome') #update to check credentials
 def welcome():
-    if session.has_key('username'): #renders welcome page if a 'username' key exists
-        return render_template('welcome.html')
+    checklogged() #renders welcome page if a 'username' key exists
+        #return render_template('welcome.html')
     return redirect(url_for('home'))
 @app.route('/failed')
 def failed():
