@@ -1,12 +1,16 @@
-<!DOCTYPE html>
-<html>
-	<body>
-		<center>
-			<font size = "24sp">
-				<u>Welcome to the welcome page,</u> <font color = "Blue">{{UN}}!</font>
-				<br><br>
-				<a href = '/logout'>Logout</a>
-			</font>
-		</center>
-	</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}
+Welcome
+{% endblock %}
+
+{% block content %}
+<center>
+	<center>
+		<font size = "24sp">
+			<u>Welcome to the welcome page,</u> <font color = "Blue">{{UN}}!</font>
+			<br><br>
+			<a href = '/logout'>Logout</a>
+		</font>
+	</center>
+{% endblock %}
